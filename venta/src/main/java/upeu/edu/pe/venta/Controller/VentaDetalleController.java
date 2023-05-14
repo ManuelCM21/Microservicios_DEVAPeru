@@ -16,7 +16,7 @@ import upeu.edu.pe.venta.Entity.VentaDetalle;
 import upeu.edu.pe.venta.Service.VentaDetalleService;
 
 @RestController
-@RequestMapping("/ventadetalle")
+@RequestMapping("/ventadetalledev")
 public class VentaDetalleController {
     @Autowired
     private VentaDetalleService ventaDetalleService;
