@@ -21,30 +21,30 @@ import upeu.edu.pe.venta.service.VentaDetalleService;
 @RequestMapping("/ventadetalledev")
 public class VentaDetalleController {
     @Autowired
-    private VentaDetalleService ventaDetalleService;
+    private VentaDetalleService ventadetalleservice;
 
     @GetMapping()
     public List<VentaDetalle> listar() {
-        return ventaDetalleService.listar();
+        return ventadetalleservice.listar();
     }
 
     @PostMapping()
     public VentaDetalle guardar(@RequestBody VentaDetalle ventaDetalle) {
-        return ventaDetalleService.guardar(ventaDetalle);
+        return ventadetalleservice.guardar(ventaDetalle);
     }
 
     @GetMapping("/{id}")
     public VentaDetalle buscarPorId(@PathVariable(required = true) Integer id) {
-        return ventaDetalleService.listarPorId(id).get();
+        return ventadetalleservice.listarPorId(id).get();
     }
 
     @PutMapping()
     public VentaDetalle actualizar(@RequestBody VentaDetalle ventaDetalle) {
-        return ventaDetalleService.actualizar(ventaDetalle);
+        return ventadetalleservice.actualizar(ventaDetalle);
     }
 
     @DeleteMapping("/{id}")
     public void eliminarPorId(@PathVariable(required = true) Integer id) {
-        ventaDetalleService.eliminarPorId(id);
+        ventadetalleservice.eliminarPorId(id);
     }
 }
