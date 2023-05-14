@@ -10,6 +10,7 @@ import upeu.edu.pe.venta.entity.Venta;
 import upeu.edu.pe.venta.repository.VentaRepository;
 import upeu.edu.pe.venta.service.VentaService;
 
+
 @Service
 public class VentaServiceImpl implements VentaService{
     @Autowired
@@ -21,15 +22,15 @@ public class VentaServiceImpl implements VentaService{
     }
 
     @Override
-    public Venta guardar(Venta venta) {
+    public Venta guardar(Venta producto) {
         
-        return ventaRepository.save(venta);
+        return ventaRepository.save(producto);
     }
 
     @Override
-    public Venta actualizar(Venta venta) {
+    public Venta actualizar(Venta producto) {
         
-        return ventaRepository.save(venta);
+        return ventaRepository.save(producto);
     }
 
     @Override

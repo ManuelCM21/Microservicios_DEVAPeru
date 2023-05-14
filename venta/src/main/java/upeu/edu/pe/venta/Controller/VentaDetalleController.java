@@ -47,4 +47,3 @@ public class VentaDetalleController {
         ventaDetalleService.eliminarPorId(id);
     }
 }
-

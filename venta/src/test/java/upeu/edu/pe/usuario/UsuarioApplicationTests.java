@@ -1,10 +1,10 @@
-package upeu.edu.pe.venta;
+package upeu.edu.pe.usuario;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class VentaApplicationTests {
+class UsuarioApplicationTests {
 
 	@Test
 	void contextLoads() {

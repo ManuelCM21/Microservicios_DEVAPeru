@@ -10,5 +10,5 @@ public interface VentaDetalleService {
     public VentaDetalle guardar (VentaDetalle ventaDetalle);
     public VentaDetalle actualizar (VentaDetalle ventaDetalle);
     public Optional<VentaDetalle>listarPorId(Integer id);
-    public void eliminarPorId(Integer id);
+    public void eliminarPorId(Integer id); 
 }
