@@ -1,4 +1,4 @@
-package upeu.edu.pe.venta.Controller;
+package upeu.edu.pe.venta.controller;
 
 import java.util.List;
 
@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import upeu.edu.pe.venta.Entity.VentaDetalle;
-import upeu.edu.pe.venta.Service.VentaDetalleService;
+import upeu.edu.pe.venta.entity.VentaDetalle;
+import upeu.edu.pe.venta.service.VentaDetalleService;
+
 
 
 @RestController

@@ -1,13 +1,13 @@
-package upeu.edu.pe.venta.Service.Impl;
-
+package upeu.edu.pe.venta.service.impl;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import upeu.edu.pe.venta.Entity.VentaDetalle;
-import upeu.edu.pe.venta.Repository.VentaDetalleRepository;
-import upeu.edu.pe.venta.Service.VentaDetalleService;
+import upeu.edu.pe.venta.entity.VentaDetalle;
+import upeu.edu.pe.venta.repository.VentaDetalleRepository;
+import upeu.edu.pe.venta.service.VentaDetalleService;
+
 
 public class VentaDetalleServiceImpl implements VentaDetalleService{
     @Autowired

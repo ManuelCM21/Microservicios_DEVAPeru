@@ -1,9 +1,11 @@
-package upeu.edu.pe.venta.Service;
+package upeu.edu.pe.venta.service;
 
 import java.util.List;
 import java.util.Optional;
 
-import upeu.edu.pe.venta.Entity.VentaDetalle;
+import upeu.edu.pe.venta.entity.VentaDetalle;
+
+
 
 public interface VentaDetalleService {
     public List<VentaDetalle> listar();
