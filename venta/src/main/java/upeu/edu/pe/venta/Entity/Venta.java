@@ -3,6 +3,8 @@ package upeu.edu.pe.venta.entity;
 import java.text.DateFormat;
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -13,7 +15,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import lombok.Data;
+import upeu.edu.pe.venta.dto.Usuario;
 
 @Entity
 @Data
@@ -25,10 +29,12 @@ public class Venta {
     private Double total;
     private DateFormat fecha;
     private String descripcion;
-    private String clienteId;
+    private Integer clienteId;
     
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "venta_id")
     private List<VentaDetalle> detalle;
+    @Transient
+    private Usuario usuario;
 }
