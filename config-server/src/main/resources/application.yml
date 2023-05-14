@@ -1,0 +1,18 @@
+server:
+    port: 8484
+spring:
+    application:
+        name: config-server
+    cloud:
+        config:
+            server:
+                git:
+                    uri: https://github.com/ManuelCM21/Microservicios_DEVAPeru.git
+                    search-paths: config-data
+                    username: ManuelCM21
+                    password: chunca77298041
+                    default-label: main
+    security:
+        user:
+            name: root
+            password: s3cr3t
