@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import upeu.edu.pe.venta.entity.VentaDetalle;
 
-
-
 public interface VentaDetalleService {
     public List<VentaDetalle> listar();
     public VentaDetalle guardar (VentaDetalle ventaDetalle);

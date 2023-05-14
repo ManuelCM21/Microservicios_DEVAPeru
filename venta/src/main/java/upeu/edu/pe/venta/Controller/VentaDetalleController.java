@@ -8,43 +8,43 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import upeu.edu.pe.venta.entity.VentaDetalle;
 import upeu.edu.pe.venta.service.VentaDetalleService;
 
 
-
 @RestController
-@RequestMapping("/ventadetalledev")
+@RequestMapping("/ventadetalle")
 public class VentaDetalleController {
     @Autowired
-    private VentaDetalleService ventadetalleservice;
+    private VentaDetalleService ventaDetalleService;
 
     @GetMapping()
     public List<VentaDetalle> listar() {
-        return ventadetalleservice.listar();
+        return ventaDetalleService.listar();
     }
 
     @PostMapping()
     public VentaDetalle guardar(@RequestBody VentaDetalle ventaDetalle) {
-        return ventadetalleservice.guardar(ventaDetalle);
+        return ventaDetalleService.guardar(ventaDetalle);
     }
 
     @GetMapping("/{id}")
     public VentaDetalle buscarPorId(@PathVariable(required = true) Integer id) {
-        return ventadetalleservice.listarPorId(id).get();
+        return ventaDetalleService.listarPorId(id).get();
     }
 
     @PutMapping()
     public VentaDetalle actualizar(@RequestBody VentaDetalle ventaDetalle) {
-        return ventadetalleservice.actualizar(ventaDetalle);
+        return ventaDetalleService.actualizar(ventaDetalle);
     }
 
     @DeleteMapping("/{id}")
     public void eliminarPorId(@PathVariable(required = true) Integer id) {
-        ventadetalleservice.eliminarPorId(id);
+        ventaDetalleService.eliminarPorId(id);
     }
 }
+
