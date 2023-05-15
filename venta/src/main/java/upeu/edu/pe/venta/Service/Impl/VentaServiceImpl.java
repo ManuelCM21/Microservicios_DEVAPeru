@@ -49,7 +49,7 @@ public class VentaServiceImpl implements VentaService{
     public Optional<Venta> listarPorId(Integer id) {
         Venta venta = ventaRepository.findById(id).get();
 
-        Usuario usuario= usuarioFeing.listById(venta.getClienteId()).getBody();
+        Usuario usuario= usuarioFeing.listById(venta.getUsuarioId()).getBody();
         List<VentaDetalle> ventaDetalles = venta.getDetalle().stream().map(ventaDetalle -> {
             System.out.println(ventaDetalle.toString());
             System.out.println("Antes de la peticion");
