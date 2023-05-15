@@ -3,8 +3,6 @@ package upeu.edu.pe.venta.entity;
 import java.text.DateFormat;
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
