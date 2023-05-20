@@ -1,5 +1,5 @@
 server:
-    port: 8484
+    port: 8585
 spring:
     application:
         name: config-server

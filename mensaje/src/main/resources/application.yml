@@ -1,18 +1,7 @@
-server:
-  port: 8484  
-springdoc:
-  api-doc:
-    enabled: true
-  swagger-ui:
-    enabled: true
-    path: /doc/swagger-ui.html  
 spring:
-  jpa:
-    hibernate.ddl-auto: update
-    show-sql: true
-    generate-ddl: true
-  datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mensaje
-    username: root
-    password:
+  application:
+    name: mensaje-service
+  profiles:
+    active: development
+  config:
+    import: optional:configserver:http://root:s3cr3t@localhost:8585
