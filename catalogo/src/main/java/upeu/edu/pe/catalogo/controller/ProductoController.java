@@ -1,9 +1,13 @@
 package upeu.edu.pe.catalogo.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import upeu.edu.pe.catalogo.entity.Producto;
 import upeu.edu.pe.catalogo.service.ProductoService;
@@ -27,6 +31,16 @@ public class ProductoController {
     public Producto guardar(@RequestBody Producto producto) {
         producto.setCategoria(producto.getCategoria());
         return productoService.guardar(producto);
+    }
+
+    @PostMapping("/imagen/{id}")
+    public ResponseEntity<String> cargarImagen(@PathVariable Integer id, @RequestParam("imagen") MultipartFile archivo) {
+        try {
+            productoService.guardarImagen(id, archivo);
+            return ResponseEntity.ok("Imagen cargada correctamente.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cargar la imagen.");
+        }
     }
 
     @GetMapping("/{id}")

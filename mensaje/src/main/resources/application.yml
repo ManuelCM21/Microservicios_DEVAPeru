@@ -1,6 +1,6 @@
 spring:
   application:
-    name: venta-service
+    name: mensaje-service
   profiles:
     active: development
   config:
