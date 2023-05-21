@@ -49,26 +49,25 @@ public class VentaServiceImpl implements VentaService{
     public Optional<Venta> listarPorId(Integer id) {
         Venta venta = ventaRepository.findById(id).get();
 
-        Usuario usuario= usuarioFeing.listById(venta.getUsuarioId()).getBody();
+        
         List<VentaDetalle> ventaDetalles = venta.getDetalle().stream().map(ventaDetalle -> {
-            System.out.println(ventaDetalle.toString());
-            System.out.println("Antes de la peticion");
+            //System.out.println(ventaDetalle.toString());
+            //System.out.println("Antes de la peticion");
             Producto producto = productoFeing.listById(ventaDetalle.getProductoId()).getBody();
-            System.out.println("Despues de la peticion");
-            System.out.println(producto.toString());
-            System.out.println(producto.getNombre());
+            //System.out.println("Despues de la peticion");
+            //System.out.println(producto.toString());
+            //System.out.println(producto.getNombre());
             ventaDetalle.setProducto(producto);
             return ventaDetalle;
         }).collect(Collectors.toList());
         venta.setDetalle(ventaDetalles);
-
+        Usuario usuario= usuarioFeing.listById(venta.getUsuarioId()).getBody();
         venta.setUsuario(usuario);
-        return ventaRepository.findById(id);
+        return Optional.of(venta);
     }
 
     @Override
     public void eliminarPorId(Integer id) {
-        
         ventaRepository.deleteById(id);
     }
 }

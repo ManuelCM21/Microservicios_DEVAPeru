@@ -1,6 +1,6 @@
 package upeu.edu.pe.venta.entity;
 
-import java.text.DateFormat;
+
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -25,7 +25,7 @@ public class Venta {
     private Integer id;
     private String serie;
     private Double total;
-    private DateFormat fecha;
+    private String fecha;
     private String descripcion;
     private Integer usuarioId;
     
