@@ -11,4 +11,5 @@ public interface VentaService {
     public Venta actualizar (Venta venta);
     public Optional<Venta>listarPorId(Integer id);
     public void eliminarPorId(Integer id);
+    public Venta getventa(Integer id);
 }

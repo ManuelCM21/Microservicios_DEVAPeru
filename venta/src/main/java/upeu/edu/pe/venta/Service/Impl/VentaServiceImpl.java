@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import upeu.edu.pe.venta.dto.Producto;
 import upeu.edu.pe.venta.dto.Usuario;
 import upeu.edu.pe.venta.entity.Venta;
@@ -34,15 +33,31 @@ public class VentaServiceImpl implements VentaService{
     }
 
     @Override
-    public Venta guardar(Venta producto) {
-        
-        return ventaRepository.save(producto);
+    public Venta guardar(Venta venta) {
+        Venta ventaDB = ventaRepository.findBySerie( venta.getSerie() );
+        if (ventaDB !=null){
+            return  ventaDB;
+        }
+        ventaDB = ventaRepository.save(venta);
+        ventaDB.getDetalle().forEach( ventaItem -> {
+            productoFeing.updateStockProducto( ventaItem.getProductoId(), ventaItem.getCantidad() * -1);
+        });
+
+        return ventaDB;
     }
 
     @Override
-    public Venta actualizar(Venta producto) {
-        
-        return ventaRepository.save(producto);
+    public Venta actualizar(Venta venta) {
+        Venta ventaDB = getventa(venta.getId());
+        if (ventaDB == null){
+            return  null;
+        }
+        ventaDB.setUsuarioId(venta.getUsuarioId());
+        ventaDB.setDescripcion(venta.getDescripcion());
+        ventaDB.setSerie(venta.getSerie());
+        ventaDB.getDetalle().clear();
+        ventaDB.setDetalle(venta.getDetalle());
+        return ventaRepository.save(ventaDB);
     }
 
     @Override
@@ -53,7 +68,7 @@ public class VentaServiceImpl implements VentaService{
         List<VentaDetalle> ventaDetalles = venta.getDetalle().stream().map(ventaDetalle -> {
             //System.out.println(ventaDetalle.toString());
             //System.out.println("Antes de la peticion");
-            Producto producto = productoFeing.listById(ventaDetalle.getProductoId()).getBody();
+            Producto producto = productoFeing.getProducto(ventaDetalle.getProductoId()).getBody();
             //System.out.println("Despues de la peticion");
             //System.out.println(producto.toString());
             //System.out.println(producto.getNombre());
@@ -61,7 +76,7 @@ public class VentaServiceImpl implements VentaService{
             return ventaDetalle;
         }).collect(Collectors.toList());
         venta.setDetalle(ventaDetalles);
-        Usuario usuario= usuarioFeing.listById(venta.getUsuarioId()).getBody();
+        Usuario usuario= usuarioFeing.getusuario(venta.getUsuarioId()).getBody();
         venta.setUsuario(usuario);
         return Optional.of(venta);
     }
@@ -70,4 +85,23 @@ public class VentaServiceImpl implements VentaService{
     public void eliminarPorId(Integer id) {
         ventaRepository.deleteById(id);
     }
+
+    @Override
+    public Venta getventa(Integer id) {
+
+            Venta venta= ventaRepository.findById(id).orElse(null);
+            if (null != venta ){
+                Usuario usuario = usuarioFeing.getusuario(venta.getUsuarioId()).getBody();
+                venta.setUsuario(usuario);
+                List<VentaDetalle> listItem=venta.getDetalle().stream().map(ventadetalle -> {
+                    Producto producto = productoFeing.getProducto(ventadetalle.getProductoId()).getBody();
+                    ventadetalle.setProducto(producto);
+                    return ventadetalle;
+                }).collect(Collectors.toList());
+                venta.setDetalle(listItem);
+            }
+            return venta ;
+        
+    }
+
 }
