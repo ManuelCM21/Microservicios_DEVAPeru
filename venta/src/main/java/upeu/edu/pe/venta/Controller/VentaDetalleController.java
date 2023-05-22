@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import upeu.edu.pe.venta.entity.VentaDetalle;
 import upeu.edu.pe.venta.service.VentaDetalleService;
-
-
+//ngn
 @RestController
 @RequestMapping("/ventadetalle")
 public class VentaDetalleController {
