@@ -1,4 +1,4 @@
-package upeu.edu.pe.venta.controller;
+package upeu.edu.pe.venta.Controller;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import upeu.edu.pe.venta.entity.VentaDetalle;
-import upeu.edu.pe.venta.service.VentaDetalleService;
-//ngn
+import upeu.edu.pe.venta.Entity.VentaDetalle;
+import upeu.edu.pe.venta.Service.VentaDetalleService;
+
 @RestController
 @RequestMapping("/ventadetalle")
 public class VentaDetalleController {
