@@ -1,4 +1,4 @@
-package upeu.edu.pe.venta.Entity;
+package upeu.edu.pe.venta.entity;
 
 
 import java.util.List;
