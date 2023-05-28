@@ -1,4 +1,4 @@
-package upeu.edu.pe.venta.entity;
+package upeu.edu.pe.venta.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

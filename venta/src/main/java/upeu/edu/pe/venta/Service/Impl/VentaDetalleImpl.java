@@ -1,4 +1,4 @@
-package upeu.edu.pe.venta.service.impl;
+package upeu.edu.pe.venta.Service.Impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,11 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import upeu.edu.pe.venta.entity.VentaDetalle;
-import upeu.edu.pe.venta.repository.VentaDetalleRepository;
-import upeu.edu.pe.venta.service.VentaDetalleService;
-
-
+import upeu.edu.pe.venta.Entity.VentaDetalle;
+import upeu.edu.pe.venta.Repository.VentaDetalleRepository;
+import upeu.edu.pe.venta.Service.VentaDetalleService;
 
 @Service
 public class VentaDetalleImpl implements VentaDetalleService{
