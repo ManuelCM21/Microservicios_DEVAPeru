@@ -25,7 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/imagen")
+@RequestMapping("/image")
 public class ImagenController {
   private final String UPLOAD_DIR = "src/main/resources/public/imagenes";
 
