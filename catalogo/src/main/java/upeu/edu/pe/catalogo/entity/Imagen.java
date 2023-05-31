@@ -6,17 +6,17 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-import com.google.common.primitives.UnsignedInteger;
-
 @Entity
 @Data
 public class Imagen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer image_id;
+
     private String url;
-    //@Column(columnDefinition = "UNSIGNED")
-    private UnsignedInteger image_id;
     private String estado;
 
     @Column(name = "fecha_creacion")
