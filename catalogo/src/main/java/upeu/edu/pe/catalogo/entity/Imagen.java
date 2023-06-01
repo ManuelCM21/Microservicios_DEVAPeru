@@ -9,14 +9,28 @@ import java.time.temporal.ChronoUnit;
 @Entity
 @Data
 public class Imagen {
+    /*
+     * @Id
+     * 
+     * @GeneratedValue(strategy = GenerationType.IDENTITY)
+     * private Integer id;
+     * 
+     * @GeneratedValue(strategy = GenerationType.IDENTITY)
+     * private Integer image_id;
+     * 
+     * private String url;
+     * private String estado;
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer image_id;
+    @Column(name = "image_id")
+    private Long imageId;
 
     private String url;
+    private String imageableType;
     private String estado;
 
     @Column(name = "fecha_creacion")

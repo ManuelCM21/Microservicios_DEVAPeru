@@ -24,9 +24,25 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Random;
+
 @RestController
 @RequestMapping("/imagen")
 public class ImagenController {
+  private static final Random RANDOM = new Random();
+
+  public Imagen createImage(String imageableType) {
+    Imagen image = new Imagen();
+    image.setUrl("posts/image.jpg");
+    image.setImageableType(imageableType);
+    image.setImageId(generateImageableId());
+    return image;
+  }
+
+  private static Long generateImageableId() {
+    return (long) RANDOM.nextInt(1000);
+  }
+
   private final String UPLOAD_DIR = "src/main/resources/public/imagenes";
 
   @Autowired
@@ -34,7 +50,7 @@ public class ImagenController {
 
   @GetMapping()
   public ResponseEntity<List<Imagen>> listar() {
-      return ResponseEntity.ok().body(imagenService.listar());
+    return ResponseEntity.ok().body(imagenService.listar());
   }
 
   @PostMapping()
@@ -84,13 +100,12 @@ public class ImagenController {
   }
 
   @GetMapping("/{id}")
-    public ResponseEntity<Imagen> buscarPorId(@PathVariable(required = true) Integer id) {
-        return ResponseEntity.ok(imagenService.listarPorId(id).get());
-    }
+  public ResponseEntity<Imagen> buscarPorId(@PathVariable(required = true) Integer id) {
+    return ResponseEntity.ok(imagenService.listarPorId(id).get());
+  }
 
   @PutMapping("/imagen/{id}")
   public ResponseEntity<String> actualizar(@PathVariable("id") Integer id,
-      @RequestParam(value = "image_type", required = false) String image_type,
       @RequestParam(value = "file", required = false) MultipartFile file,
       @ModelAttribute Imagen imagen) {
 
@@ -102,9 +117,6 @@ public class ImagenController {
     Imagen imagenActual = imagenExistente.get();
 
     try {
-      if (image_type != null) {
-        imagenActual.setUrl(image_type);
-      }
 
       if (file != null && !file.isEmpty()) {
         String fileExtension = getFileExtension(file.getOriginalFilename());
@@ -131,7 +143,7 @@ public class ImagenController {
       if (imagen.getEstado() != null) {
         imagenActual.setEstado(imagen.getEstado());
       }
-      
+
       imagenService.actualizar(imagenActual);
 
       return ResponseEntity.ok(imagenActual.getUrl());
