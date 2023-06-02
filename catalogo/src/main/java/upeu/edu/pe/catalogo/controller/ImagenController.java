@@ -8,12 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import upeu.edu.pe.catalogo.entity.Imagen;
+import upeu.edu.pe.catalogo.entity.Post;
 import upeu.edu.pe.catalogo.service.ImagenService;
+import upeu.edu.pe.catalogo.service.PostService;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.Random;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,29 +28,20 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Random;
-
 @RestController
 @RequestMapping("/imagen")
 public class ImagenController {
   private static final Random RANDOM = new Random();
-
-  public Imagen createImage(String imageableType) {
-    Imagen image = new Imagen();
-    image.setUrl("posts/image.jpg");
-    image.setImageableType(imageableType);
-    image.setImageId(generateImageableId());
-    return image;
-  }
+  private final String UPLOAD_DIR = "src/main/resources/public/imagenes";
 
   private static Long generateImageableId() {
     return (long) RANDOM.nextInt(1000);
   }
 
-  private final String UPLOAD_DIR = "src/main/resources/public/imagenes";
-
   @Autowired
   private ImagenService imagenService;
+  @Autowired
+  private PostService postService;
 
   @GetMapping()
   public ResponseEntity<List<Imagen>> listar() {
@@ -54,7 +49,8 @@ public class ImagenController {
   }
 
   @PostMapping()
-  public ResponseEntity<String> guardar(@ModelAttribute Imagen imagen, @RequestParam("file") MultipartFile file) {
+  public ResponseEntity<String> guardar(@ModelAttribute Imagen imagen, @RequestParam("file") MultipartFile file,
+      @RequestParam("post_id") Integer postId) {
 
     if (file.isEmpty()) {
       System.err.println("No se ha proporcionado un archivo adjunto válido.");
@@ -62,6 +58,14 @@ public class ImagenController {
     }
 
     try {
+      Optional<Post> postOptional = postService.listarPorId(postId);
+      if (postOptional.isEmpty()) {
+        return ResponseEntity.badRequest().body("El post con ID " + postId + " no existe.");
+      }
+
+      Post post = postOptional.get();
+      imagen.setPost(post);
+
       String fileExtension = getFileExtension(file.getOriginalFilename());
       if (!isValidImageExtension(fileExtension)) {
         return ResponseEntity.badRequest().body("Solo se permiten archivos con extensiones .png, .jpg y .jpeg");
@@ -76,6 +80,7 @@ public class ImagenController {
 
       String fileUrl = baseUri + "/imagenes/" + newFileName;
       imagen.setUrl(fileUrl);
+      imagen.setImageId(generateImageableId());
 
       imagenService.guardar(imagen);
 
@@ -117,7 +122,6 @@ public class ImagenController {
     Imagen imagenActual = imagenExistente.get();
 
     try {
-
       if (file != null && !file.isEmpty()) {
         String fileExtension = getFileExtension(file.getOriginalFilename());
         if (!isValidImageExtension(fileExtension)) {
@@ -140,8 +144,8 @@ public class ImagenController {
         imagenActual.setUrl(fileUrl);
       }
 
-      if (imagen.getEstado() != null) {
-        imagenActual.setEstado(imagen.getEstado());
+      if (imagen.getImageId() != null) {
+        imagenActual.setImageId(imagen.getImageId());
       }
 
       imagenService.actualizar(imagenActual);

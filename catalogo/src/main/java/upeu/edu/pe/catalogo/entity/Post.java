@@ -5,22 +5,18 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Entity
 @Data
-public class Imagen {
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(name = "image_id")
-    private Long imageId;
-
-    private String url;
-
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
+    private String nombre;
+    private String estado;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Imagen> images;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
