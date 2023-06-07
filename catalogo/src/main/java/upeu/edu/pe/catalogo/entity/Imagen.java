@@ -13,14 +13,8 @@ public class Imagen {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "image_id")
-    private Long imageId;
-
+    private String nombre;
     private String url;
-
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;

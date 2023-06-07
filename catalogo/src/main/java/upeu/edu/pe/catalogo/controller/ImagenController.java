@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.UUID;
-import java.util.Random;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,65 +30,58 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/imagen")
 public class ImagenController {
-  private static final Random RANDOM = new Random();
-  private final String UPLOAD_DIR = "src/main/resources/public/imagenes";
 
-  private static Long generateImageableId() {
-    return (long) RANDOM.nextInt(1000);
-  }
+  private final String UPLOAD_DIR = "src/main/resources/public/imagenes";
 
   @Autowired
   private ImagenService imagenService;
-  @Autowired
-  private PostService postService;
 
   @GetMapping()
   public ResponseEntity<List<Imagen>> listar() {
     return ResponseEntity.ok().body(imagenService.listar());
   }
 
-  @PostMapping()
-  public ResponseEntity<String> guardar(@ModelAttribute Imagen imagen, @RequestParam("file") MultipartFile file,
-      @RequestParam("post_id") Integer postId) {
-
-    if (file.isEmpty()) {
-      System.err.println("No se ha proporcionado un archivo adjunto válido.");
-      return ResponseEntity.badRequest().build();
-    }
-
-    try {
-      Optional<Post> postOptional = postService.listarPorId(postId);
-      if (postOptional.isEmpty()) {
-        return ResponseEntity.badRequest().body("El post con ID " + postId + " no existe.");
+ /*  @PostMapping()
+  public ResponseEntity<String> guardar(@PathVariable("postId") Integer postId,
+                                              @RequestParam("file") MultipartFile file) {
+      // Verificar si el producto existe
+      Optional<Post> productoOptional = postService.listarPorId(postId);
+      if (!productoOptional.isPresent()) {
+          return ResponseEntity.notFound().build();
       }
-
-      Post post = postOptional.get();
-      imagen.setPost(post);
-
-      String fileExtension = getFileExtension(file.getOriginalFilename());
-      if (!isValidImageExtension(fileExtension)) {
-        return ResponseEntity.badRequest().body("Solo se permiten archivos con extensiones .png, .jpg y .jpeg");
+  
+      if (file.isEmpty()) {
+          System.err.println("No se ha proporcionado un archivo adjunto válido.");
+          return ResponseEntity.badRequest().build();
       }
-      String filename = UUID.randomUUID().toString();
-      String newFileName = filename + fileExtension;
-      Path filePath = Path.of(UPLOAD_DIR, newFileName);
-
-      String baseUri = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-
-      Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-      String fileUrl = baseUri + "/imagenes/" + newFileName;
-      imagen.setUrl(fileUrl);
-      imagen.setImageId(generateImageableId());
-
-      imagenService.guardar(imagen);
-
-      return ResponseEntity.ok(fileUrl);
-    } catch (IOException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
-  }
-
+  
+      try {
+          String fileExtension = getFileExtension(file.getOriginalFilename());
+          if (!isValidImageExtension(fileExtension)) {
+              return ResponseEntity.badRequest().body("Solo se permiten archivos con extensiones .png, .jpg y .jpeg");
+          }
+  
+          String filename = UUID.randomUUID().toString();
+          String newFileName = filename + fileExtension;
+          Path filePath = Paths.get(UPLOAD_DIR, newFileName);
+  
+          String baseUri = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+  
+          Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+  
+          String fileUrl = baseUri + "/imagenes/" + newFileName;
+  
+          Imagen imagen = new Imagen();
+          imagen.setUrl(fileUrl);
+          imagen.setPost(productoOptional.get()); // Corregido: Se utiliza productoOptional en lugar de postService.obtenerProducto(postId)
+          imagenService.guardar(imagen);
+  
+          return ResponseEntity.ok(fileUrl);
+      } catch (IOException e) {
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+      }
+  }*/
+   
   private boolean isValidImageExtension(String fileExtension) {
     return fileExtension.equalsIgnoreCase(".png") ||
         fileExtension.equalsIgnoreCase(".jpg") ||
@@ -142,10 +134,6 @@ public class ImagenController {
 
         String fileUrl = baseUri + "/imagenes/" + newFileName;
         imagenActual.setUrl(fileUrl);
-      }
-
-      if (imagen.getImageId() != null) {
-        imagenActual.setImageId(imagen.getImageId());
       }
 
       imagenService.actualizar(imagenActual);
