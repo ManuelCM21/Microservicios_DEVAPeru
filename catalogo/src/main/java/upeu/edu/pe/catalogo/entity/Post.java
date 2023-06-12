@@ -6,6 +6,8 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Data
 public class Post {
@@ -14,7 +16,9 @@ public class Post {
     private Integer id;
     private String nombre;
     private String estado;
-    @OneToOne(cascade = CascadeType.ALL)
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @JoinColumn(name = "imagen_id")
     private Imagen image;
 

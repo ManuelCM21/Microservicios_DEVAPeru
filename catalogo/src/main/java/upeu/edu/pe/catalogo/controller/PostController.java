@@ -5,9 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,40 +35,63 @@ public class PostController {
     return ResponseEntity.ok().body(postService.listar());
   }
 
+  private AtomicInteger imageableIdCounter = new AtomicInteger(0);
+
+  private Integer generarImageableId(MultipartFile[] files) {
+    // Incrementar el imageableId solo cuando se suben múltiples imágenes
+    if (files.length > 1) {
+      return imageableIdCounter.incrementAndGet();
+    }
+    return imageableIdCounter.get();
+  }
+
   @PostMapping()
-  public ResponseEntity<String> guardar(@ModelAttribute Post post, @RequestParam("file") MultipartFile file) {
+  public ResponseEntity<List<String>> guardar(
+      @ModelAttribute Post post,
+      @RequestParam("file") MultipartFile[] files) {
 
-    if (file.isEmpty()) {
-      System.err.println("No se ha proporcionado un archivo adjunto válido.");
-      return ResponseEntity.badRequest().build();
-    }
+    List<String> fileUrls = new ArrayList<>();
+    Integer imageableId = generarImageableId(files);
 
-    try {
-      String fileExtension = getFileExtension(file.getOriginalFilename());
-      if (!isValidImageExtension(fileExtension)) {
-        return ResponseEntity.badRequest().body("Solo se permiten archivos con extensiones .png, .jpg y .jpeg");
+    for (MultipartFile file : files) {
+      if (file.isEmpty()) {
+        System.err.println("No se ha proporcionado un archivo adjunto válido.");
+        return ResponseEntity.badRequest().build();
       }
-      String filename = UUID.randomUUID().toString();
-      String newFileName = filename + fileExtension;
-      Path filePath = Path.of(UPLOAD_DIR, newFileName);
 
-      String baseUri = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+      try {
+        String fileExtension = getFileExtension(file.getOriginalFilename());
+        if (!isValidImageExtension(fileExtension)) {
+          List<String> errorResponse = new ArrayList<>();
+          errorResponse.add("Solo se permiten archivos con extensiones .png, .jpg y .jpeg");
+          return ResponseEntity.badRequest().body(errorResponse);
+        }
 
-      Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        String filename = UUID.randomUUID().toString();
+        String newFileName = filename + fileExtension;
+        Path filePath = Path.of(UPLOAD_DIR, newFileName);
 
-      String fileUrl = baseUri + "/imagenes/" + newFileName;
-      Imagen imagen = new Imagen();
-      imagen.setNombre(file.getOriginalFilename());
-      imagen.setUrl(fileUrl);
+        String baseUri = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 
-      post.setImage(imagen);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-      postService.guardar(post);
+        String fileUrl = baseUri + "/imagenes/" + newFileName;
+        fileUrls.add(fileUrl);
 
-      return ResponseEntity.ok(fileUrl);
-    } catch (IOException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        Imagen imagen = new Imagen();
+        imagen.setNombre(file.getOriginalFilename());
+        imagen.setUrl(fileUrl);
+        imagen.setImageableId(imageableId);
+
+        post.setImage(imagen);
+
+        postService.guardar(post);
+
+      } catch (IOException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+      }
     }
+    return ResponseEntity.ok(fileUrls);
   }
 
   private boolean isValidImageExtension(String fileExtension) {
@@ -163,8 +188,34 @@ public class PostController {
   }
 
   @DeleteMapping("/{id}")
-  public String eliminar(@PathVariable(required = true) Integer id) {
+  public ResponseEntity<String> eliminar(@PathVariable(required = true) Integer id) throws IOException {
+    // Obtener la imagen por su ID
+    Optional<Post> imagenOptional = postService.listarPorId(id);
+    if (!imagenOptional.isPresent()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    // Obtener la imagen y su URL
+    Post imagen = imagenOptional.get();
+    String imageUrl = imagen.getImage().getUrl();
+
+    // Verificar la existencia de la imagen en el sistema de archivos
+    if (!imageExists(imageUrl)) {
+      return ResponseEntity.notFound().build();
+    }
+
+    // Eliminar el archivo de la carpeta
+    deleteImageFile(imageUrl);
+
+    // Eliminar la imagen de la base de datos
     postService.eliminarPorId(id);
-    return "Eliminación Correcta";
+
+    return ResponseEntity.ok("Eliminación correcta");
+  }
+
+  private boolean imageExists(String imageUrl) {
+    String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+    String filePath = UPLOAD_DIR + "/" + fileName;
+    return Files.exists(Paths.get(filePath));
   }
 }

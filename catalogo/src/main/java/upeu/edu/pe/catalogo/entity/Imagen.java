@@ -16,6 +16,9 @@ public class Imagen {
     private String nombre;
     private String url;
 
+    @Column(name = "imageable_id")
+    private Integer imageableId;
+
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
 
