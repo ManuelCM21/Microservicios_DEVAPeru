@@ -4,6 +4,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8686/eureka}
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 spring:
   cloud:
     gateway:
@@ -28,15 +30,27 @@ spring:
           uri: lb://usuario-service
           predicates:
             - Path=/usuario/**
+          filters:
+            - AuthFilter
         - id: catalogo-service
           uri: lb://catalogo-service
           predicates:
            - Path=/categoria/**,/producto/**,/imagen/**,/post/**
+          filters:
+            - AuthFilter
         - id: mensaje-service
           uri: lb://mensaje-service
           predicates:
             - Path=/mensaje/**
+          filters:
+            - AuthFilter
         - id: venta-service
           uri: lb://venta-service
           predicates:
             - Path=/venta/**
+          filters:
+            - AuthFilter
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**

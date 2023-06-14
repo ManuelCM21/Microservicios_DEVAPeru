@@ -1,11 +1,5 @@
 server:
   port: ${PORT:${SERVER_PORT:0}}
-springdoc:
-  api-doc:
-    enabled: true
-  swagger-ui:
-    enabled: true
-    path: /doc/swagger-ui.html
 spring:
   jpa:
     hibernate.ddl-auto: update
@@ -13,7 +7,7 @@ spring:
     generate-ddl: true
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ventadev
+    url: jdbc:mysql://localhost:3306/authdev
     username: root
     password:
 eureka:
@@ -30,3 +24,6 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
+
+
+
