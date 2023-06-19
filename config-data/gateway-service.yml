@@ -42,8 +42,6 @@ spring:
           uri: lb://mensaje-service
           predicates:
             - Path=/mensaje/**
-          filters:
-            - AuthFilter
         - id: venta-service
           uri: lb://venta-service
           predicates:
