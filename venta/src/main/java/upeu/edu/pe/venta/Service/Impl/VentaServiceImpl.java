@@ -11,8 +11,8 @@ import upeu.edu.pe.venta.dto.Producto;
 import upeu.edu.pe.venta.dto.Usuario;
 import upeu.edu.pe.venta.entity.Venta;
 import upeu.edu.pe.venta.entity.VentaDetalle;
-import upeu.edu.pe.venta.feing.ProductoFeing;
-import upeu.edu.pe.venta.feing.UsuarioFeing;
+import upeu.edu.pe.venta.feign.ProductoFeign;
+import upeu.edu.pe.venta.feign.UsuarioFeign;
 import upeu.edu.pe.venta.repository.VentaRepository;
 import upeu.edu.pe.venta.service.VentaService;
 
@@ -22,61 +22,43 @@ public class VentaServiceImpl implements VentaService{
     private VentaRepository ventaRepository;
 
     @Autowired
-    private UsuarioFeing usuarioFeing;
+    private UsuarioFeign usuarioFeign;
 
     @Autowired
-    private ProductoFeing productoFeing;
+    private ProductoFeign productoFeign;
 
     @Override
-    public List<Venta>listar(){
+    public List<Venta> listar() {
         return ventaRepository.findAll();
     }
 
     @Override
     public Venta guardar(Venta venta) {
-        Venta ventaDB = ventaRepository.findBySerie( venta.getSerie() );
-        if (ventaDB !=null){
-            return  ventaDB;
-        }
-        ventaDB = ventaRepository.save(venta);
-        ventaDB.getDetalle().forEach( ventaItem -> {
-            productoFeing.updateStockProducto( ventaItem.getProductoId(), ventaItem.getCantidad() * -1);
-        });
-
-        return ventaDB;
+        return ventaRepository.save(venta);
     }
 
     @Override
     public Venta actualizar(Venta venta) {
-        Venta ventaDB = getventa(venta.getId());
-        if (ventaDB == null){
-            return  null;
-        }
-        ventaDB.setUsuarioId(venta.getUsuarioId());
-        ventaDB.setDescripcion(venta.getDescripcion());
-        ventaDB.setSerie(venta.getSerie());
-        ventaDB.getDetalle().clear();
-        ventaDB.setDetalle(venta.getDetalle());
-        return ventaRepository.save(ventaDB);
+        return ventaRepository.save(venta);
     }
 
     @Override
     public Optional<Venta> listarPorId(Integer id) {
         Venta venta = ventaRepository.findById(id).get();
 
-        
+        Usuario usuario = usuarioFeign.listById(venta.getUsuarioId()).getBody();
         List<VentaDetalle> ventaDetalles = venta.getDetalle().stream().map(ventaDetalle -> {
-            //System.out.println(ventaDetalle.toString());
-            //System.out.println("Antes de la peticion");
-            Producto producto = productoFeing.getProducto(ventaDetalle.getProductoId()).getBody();
-            //System.out.println("Despues de la peticion");
-            //System.out.println(producto.toString());
-            //System.out.println(producto.getNombre());
+            System.out.println(ventaDetalle.toString());
+            System.out.println("Antes de la peticion");
+            Producto producto = productoFeign.listById(ventaDetalle.getProductoId()).getBody();
+            System.out.println("Despues de la peticion");
+            System.out.println(producto.toString());
+            System.out.println(producto.getNombre());
             ventaDetalle.setProducto(producto);
             return ventaDetalle;
         }).collect(Collectors.toList());
         venta.setDetalle(ventaDetalles);
-        Usuario usuario= usuarioFeing.getusuario(venta.getUsuarioId()).getBody();
+
         venta.setUsuario(usuario);
         return Optional.of(venta);
     }
@@ -85,23 +67,4 @@ public class VentaServiceImpl implements VentaService{
     public void eliminarPorId(Integer id) {
         ventaRepository.deleteById(id);
     }
-
-    @Override
-    public Venta getventa(Integer id) {
-
-            Venta venta= ventaRepository.findById(id).orElse(null);
-            if (null != venta ){
-                Usuario usuario = usuarioFeing.getusuario(venta.getUsuarioId()).getBody();
-                venta.setUsuario(usuario);
-                List<VentaDetalle> listItem=venta.getDetalle().stream().map(ventadetalle -> {
-                    Producto producto = productoFeing.getProducto(ventadetalle.getProductoId()).getBody();
-                    ventadetalle.setProducto(producto);
-                    return ventadetalle;
-                }).collect(Collectors.toList());
-                venta.setDetalle(listItem);
-            }
-            return venta ;
-        
-    }
-
 }
