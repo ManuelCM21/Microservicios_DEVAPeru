@@ -1,4 +1,4 @@
-package upeu.edu.pe.venta.service.Impl;
+package upeu.edu.pe.venta.service.impl;
 
 import java.util.List;
 import java.util.Optional;
