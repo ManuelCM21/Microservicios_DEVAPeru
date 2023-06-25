@@ -16,6 +16,16 @@ spring:
     url: jdbc:mysql://localhost:3306/mensajedev
     username: root
     password:
+  mail:
+    host: smtp.gmail.com
+    username: martinhilasaca7@gmail.com
+    password: 75998706luis
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 eureka:
   client:
     serviceUrl:

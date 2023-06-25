@@ -10,6 +10,7 @@ import upeu.edu.pe.mensaje.service.MensajeService;
 
 @Service
 public class MensajeServiceImpl implements MensajeService {
+    
     @Autowired
     private MensajeRepository mr;
 
@@ -38,3 +39,5 @@ public class MensajeServiceImpl implements MensajeService {
         mr.deleteById(id);
     }
 }
+
+

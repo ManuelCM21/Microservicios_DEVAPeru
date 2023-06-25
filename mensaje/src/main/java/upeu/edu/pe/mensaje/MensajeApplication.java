@@ -3,6 +3,8 @@ package upeu.edu.pe.mensaje;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -24,4 +26,18 @@ public class MensajeApplication {
                 .license(new License().name("Apache 2.0").url("http://springdoc.org"))
         );
     }
+    @Bean
+    public JavaMailSender javaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        
+        // Configura las propiedades del mailSender, como el host, credenciales, etc.
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setUsername("martinhilasaca7@gmail.com");
+        mailSender.setPassword("75998706luis");
+        
+        // Configura otras propiedades, como el protocolo, autenticación, inicio seguro, etc.
+        
+        return mailSender;
+    }
+
 }

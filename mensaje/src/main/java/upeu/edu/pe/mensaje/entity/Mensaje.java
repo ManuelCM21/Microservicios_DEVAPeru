@@ -16,6 +16,7 @@ public class Mensaje {
     private String correo;
     private Integer telefono;
     private String asunto;
+      private String mensaje;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;

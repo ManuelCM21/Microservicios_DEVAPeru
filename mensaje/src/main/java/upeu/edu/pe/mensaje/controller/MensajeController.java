@@ -1,5 +1,6 @@
 package upeu.edu.pe.mensaje.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,23 +13,34 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import upeu.edu.pe.mensaje.entity.Mensaje;
+import upeu.edu.pe.mensaje.service.EmailSender;
 import upeu.edu.pe.mensaje.service.MensajeService;
 
 @RestController
 @RequestMapping("/mensaje")
 public class MensajeController {
+    LocalDateTime localDateTime = LocalDateTime.now();
+    @Autowired
+    private EmailSender emailService;
+
     @Autowired
     private MensajeService ms;
 
     @GetMapping()
     public ResponseEntity<List<Mensaje>> listar() {
         return ResponseEntity.ok().body(ms.list());
+        
     }
 
     @PostMapping()
     public ResponseEntity<Mensaje> guardar(@RequestBody Mensaje Mensaje) {
+        String destinatario = Mensaje.getCorreo();
+        String asunto = Mensaje.getAsunto();
+        String contenido = Mensaje.getMensaje();
+        emailService.enviarCorreo(destinatario, asunto, contenido);
         return ResponseEntity.ok(ms.save(Mensaje));
     }
+    
 
     @PutMapping()
     public ResponseEntity<Mensaje> actualizar(@RequestBody Mensaje Mensaje) {
@@ -45,5 +57,6 @@ public class MensajeController {
         ms.deleteById(id);
         return "Eliminado";
     }
+    
 
 }

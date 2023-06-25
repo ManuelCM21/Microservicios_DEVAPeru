@@ -22,6 +22,13 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
     @Override
     public GatewayFilter apply(Config config) {
         return (((exchange, chain) -> {
+              String requestPath = exchange.getRequest().getPath().toString();
+
+                // Verificar si la ruta debe excluirse del filtro
+                if (requestPath.equals("/mensaje") || requestPath.startsWith("/mensaje")) {
+                    // Pasar la solicitud directamente a la siguiente cadena de filtros sin validar la autenticación
+                    return chain.filter(exchange);
+            }
             if(!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION))
                 return onError(exchange, HttpStatus.BAD_REQUEST);
             String tokenHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
