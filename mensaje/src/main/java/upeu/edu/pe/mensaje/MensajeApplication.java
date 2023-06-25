@@ -33,7 +33,7 @@ public class MensajeApplication {
         // Configura las propiedades del mailSender, como el host, credenciales, etc.
         mailSender.setHost("smtp.gmail.com");
         mailSender.setUsername("martinhilasaca7@gmail.com");
-        mailSender.setPassword("75998706luis");
+        mailSender.setPassword("yxjitdpujjsbdvec");
         
         // Configura otras propiedades, como el protocolo, autenticación, inicio seguro, etc.
         
