@@ -19,7 +19,7 @@ spring:
   mail:
     host: smtp.gmail.com
     username: martinhilasaca7@gmail.com
-    password: 75998706luis
+    password: yxjitdpujjsbdvec
     properties:
       mail:
         smtp:
