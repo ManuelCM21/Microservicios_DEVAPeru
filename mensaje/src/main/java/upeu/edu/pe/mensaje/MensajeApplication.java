@@ -1,5 +1,7 @@
 package upeu.edu.pe.mensaje;
 
+import java.util.Properties;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +37,8 @@ public class MensajeApplication {
         mailSender.setUsername("martinhilasaca7@gmail.com");
         mailSender.setPassword("yxjitdpujjsbdvec");
         
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.smtp.starttls.enable", "true");
         // Configura otras propiedades, como el protocolo, autenticación, inicio seguro, etc.
         
         return mailSender;
